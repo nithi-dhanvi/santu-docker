@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+       environment { 
+
+        registry = "santu458/webappsantu" 
+        registryCredential = 'dockerhubID' 
+        dockerImage = '' 
+
+    }
+
+    stages {
+        stage ("Git Checkout") {
+            steps {
+                git branch: "main", url: "https://github.com/pns99/santu_app.git"
+            }
+        }
+        stage ("Maven Build") {
+        
+            steps {
+                sh "/opt/apache-maven-3.8.6/bin/mvn clean package -DskipTests=true"
+                sh "id -a"
+            }
+        }
+        
+        stage ("Sonar Publish") {
+              steps {
+                  withSonarQubeEnv("sonar") {
+                      sh "/opt/apache-maven-3.8.6/bin/mvn sonar:sonar"
+                  }
+              }
+        }
+        
+        stage ("Sonar Quality Gate status Checks") {
+              steps {
+                 script {
+                    timeout(time: 1, unit: "HOURS") {
+                        def qg = waitForQualityGate()
+                        if (qg.status != "OK") {
+                            error "Aborting the pipeline due to Quality Gate failed: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
+        stage ("UploadToNexus") {
+            steps {
+                script {
+                    UploadtoNexus()
+                }
+            }
+            
+        }
+        
+        stage ("Build the docker image") {
+            steps {
+                script {
+                dockerImage = docker.build registry + ":$BUILD_NUMBER" 
+                sh "docker images"
+                }
+            }
+        }
+              
+        stage ("Push image to dockerhub") {
+            steps {
+                script {
+                     docker.withRegistry( '', registryCredential ) { 
+                        dockerImage.push()
+                                                         
+                    }
+                }
+            }
+        }
+        stage('Cleaning up') { 
+           steps { 
+                sh "docker rmi $registry:$BUILD_NUMBER" 
+           } 
+        }
+        stage ("UAT Deploy") {
+            steps {
+                echo "${env.BUILD_NUMBER}"
+                        println "${env.BUILD_NUMBER}"
+                        sh "ansible-playbook  pull-deploy-image.yaml -e Latest_Build_Number=${env.BUILD_NUMBER}"
+            }
+        }
+    }
+}
+def UploadtoNexus() {
+     nexusArtifactUploader artifacts: [[artifactId: 'springboot-maven-course-micro-svc', classifier: '', file: 'target/springboot-maven-course-micro-svc-0.0.2-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus3', groupId: 'com.cloudtechmasters', nexusUrl: '192.168.145.131:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'SantuDevops-SNAPSHOT', version: '0.0.2-SNAPSHOT'
+}
