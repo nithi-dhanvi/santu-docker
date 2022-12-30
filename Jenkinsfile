@@ -72,7 +72,7 @@ pipeline {
             steps {
                 echo "${env.BUILD_NUMBER}"
                         println "${env.BUILD_NUMBER}"
-                        sh "ansible-playbook  UAT-deploy.yaml -e Latest_Build_Number=${env.BUILD_NUMBER}"
+                        sh "ansible-playbook  UAT-deploy.yaml -e BUILD_NUMBER=${env.BUILD_NUMBER}"
             }
         }
     }
