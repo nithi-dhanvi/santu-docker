@@ -42,14 +42,7 @@ pipeline {
                 }
             }
         }
-        stage ("UploadToNexus") {
-            steps {
-                script {
-                    UploadtoNexus()
-                }
-            }
-            
-        }
+
         
         stage ("Build the docker image") {
             steps {
@@ -83,7 +76,4 @@ pipeline {
             }
         }
     }
-}
-def UploadtoNexus() {
-     nexusArtifactUploader artifacts: [[artifactId: 'springboot-maven-course-micro-svc', classifier: '', file: 'target/springboot-maven-course-micro-svc-0.0.2-SNAPSHOT.jar', type: 'jar']], credentialsId: 'nexus3', groupId: 'com.cloudtechmasters', nexusUrl: '192.168.145.131:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'SantuDevops-SNAPSHOT', version: '0.0.2-SNAPSHOT'
 }
