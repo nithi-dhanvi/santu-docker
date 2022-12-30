@@ -6,4 +6,4 @@
     - name: Pull the image from docker hub
       shell: docker pull pothakamuri06/webapp:{{BUILD_NUMBER}}
     - name: Run the container using the Image
-      shell: docker run --name=santuspringboot -p 8080:8080 --detach pothakamuri06/webapp:{{BUILD_NUMBER}}
+      shell: docker run --name=santuspringboot -p 8081:8081 --detach pothakamuri06/webapp:{{BUILD_NUMBER}}
