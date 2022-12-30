@@ -2,8 +2,8 @@ pipeline {
     agent any
        environment { 
 
-        registry = "santu458/webappsantu" 
-        registryCredential = 'dockerhubID' 
+        registry = "pothakamuri06/webapp" 
+        registryCredential = 'dockerhub-cred' 
         dockerImage = '' 
 
     }
@@ -11,21 +11,21 @@ pipeline {
     stages {
         stage ("Git Checkout") {
             steps {
-                git branch: "main", url: "https://github.com/pns99/santu_app.git"
+                git branch: "main", url: "https://github.com/nithi-dhanvi/santu-docker.git"
             }
         }
         stage ("Maven Build") {
         
             steps {
-                sh "/opt/apache-maven-3.8.6/bin/mvn clean package -DskipTests=true"
-                sh "id -a"
+                sh "/opt/apache-maven-3.6.3/bin/mvn clean package -DskipTests=true"
+                
             }
         }
         
         stage ("Sonar Publish") {
               steps {
                   withSonarQubeEnv("sonar") {
-                      sh "/opt/apache-maven-3.8.6/bin/mvn sonar:sonar"
+                      sh "/opt/apache-maven-3.6.3/bin/mvn sonar:sonar"
                   }
               }
         }
