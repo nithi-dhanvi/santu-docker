@@ -15,7 +15,7 @@ pipeline {
         stage ( 'docker stage') {
             steps {
                 script {
-                    stage2test("pothakamuri06/sharedapp")
+                    stage2test("sharetest")
                 }
             }
         }
