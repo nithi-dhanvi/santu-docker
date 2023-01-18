@@ -1,0 +1,23 @@
+@Library('myshared_repo') _ 
+pipeline {
+    agent any
+
+    stages {
+        stage ('build sonar' ){
+            steps {
+                script {
+                    gitCheckout()
+
+                }
+            }
+        
+        }
+        stage ( 'test stage') {
+            steps {
+                script {
+                    stage2test()
+                }
+            }
+        }
+    }
+}
