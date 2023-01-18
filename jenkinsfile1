@@ -15,7 +15,7 @@ pipeline {
         stage ( 'test stage') {
             steps {
                 script {
-                    stage2test()
+                    stage2test("pothakamuri06/sharedapp")
                 }
             }
         }
