@@ -84,6 +84,7 @@ pipeline {
             steps {
                 echo "${env.BUILD_NUMBER}"
                         println "${env.BUILD_NUMBER}"
+                        sh "sed -i 's/latest/${env.BUILD_NUMBER}/g' deploy.yaml"
                         sh "kubectl apply -f svc.yaml -f deploy.yaml"
             }
         }
