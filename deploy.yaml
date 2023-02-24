@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx-ram
+    env: UAT
+    db: mongo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginxv1
+  template:
+    metadata:
+      labels:
+        app: nginxv1
+    spec:
+      containers:
+      - name: ram-nginx
+        image: pothakamuri06/webapp
+        ports:
+        - containerPort: 80
