@@ -1,5 +1,5 @@
 pipeline {
-    agent 
+    agent jenkins01
        environment { 
 
         registry = "pothakamuri06/webapp" 
