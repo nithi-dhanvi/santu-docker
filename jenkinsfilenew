@@ -17,7 +17,7 @@ pipeline {
         stage ("Maven Build") {
         
             steps {
-                sh "/opt/apache-maven-3.6.3/bin/mvn clean package -DskipTests=true"
+                sh "mvn clean package -DskipTests=true"
                 
             }
         }
@@ -25,7 +25,7 @@ pipeline {
         stage ("Sonar Publish") {
               steps {
                   withSonarQubeEnv("sonar") {
-                      sh "/opt/apache-maven-3.6.3/bin/mvn sonar:sonar"
+                      sh "mvn sonar:sonar"
                   }
               }
         }
