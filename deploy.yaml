@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
       - name: ram-nginx
-        image: pothakamuri06/webapp":$BUILD_NUMBER"
+        image: pothakamuri06/webapp:latest
         ports:
         - containerPort: 80
